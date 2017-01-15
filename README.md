@@ -6,5 +6,8 @@ Uses cosine similarity to score keyword matching.
 Also provides the users associated with the answers. 
 
 ### To use
-Download the answers.csv dataset from [here](https://www.kaggle.com/stackoverflow/pythonquestions)
-Download the files 
+Download the answers.csv dataset from [here](https://www.kaggle.com/stackoverflow/pythonquestions)  
+
+Download the python files  
+
+Setup a 
