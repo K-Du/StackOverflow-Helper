@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block body %}
+  <section class="header">
+    <h2 class="title">StackOverflow Helper</h2>
+  </section>
+  <hr />
+
+  <div class="content">
+    <h4>
+      {% if answer %}
+      OMG It is a {{ answer }}.
+      {% else %}
+        Please fill out the form below!
+      {% endif %}
+    </h4>
+    <form method="POST">
+      {{ form.csrf_token }}
+      <div class="row">
+        <div class="three columns">
+          {{ form.keywords.label }} {{ form.keywords() }}
+        </div>
+      </div>
+      <div class="row">
+        <button type="submit" class="button-primary">Submit</button>
+      </div>
+      <div class="row">
+        <svg></svg>
+      </div>
+    </form>
+    <div
+  </div>
+{% endblock body %}
+
+{% block js %}
+  <script type="text/javascript">
+  </script>
+{% endblock js %}
