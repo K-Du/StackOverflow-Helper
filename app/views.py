@@ -1,18 +1,28 @@
-
 from flask import render_template
-from flask_wtf import FlaskForm
+from flask_wtf import FlaskForm, Form
 from wtforms import fields
 from wtforms.validators import Required
 import pandas as pd
 from sklearn.metrics.pairwise import cosine_similarity
+import requests 
+import flask
+import numpy as np
+import pickle
+from bs4 import BeautifulSoup
 
 from . import app, cv, answers, answers_vecs
 
-import flask
-import numpy as np
 
+with open('models/input.pkl', 'rb') as picklefile:
+    cv = pickle.load(picklefile)
 
-class PredictForm(FlaskForm):
+with open('models/answers.pkl', 'rb') as picklefile:
+    answers = pickle.load(picklefile)
+    
+with open('models/answers_vecs.pkl', 'rb') as picklefile:
+    answers_vecs = pickle.load(picklefile)
+
+class PredictForm(Form):
     """Fields for Predict"""
     myChoices = ["one", "two", "three"]
     keywords = fields.StringField('Keywords:', validators=[Required()])
@@ -20,19 +30,16 @@ class PredictForm(FlaskForm):
     submit = fields.SubmitField('Submit')
 
 
-# Initialize the app
-
-app = flask.Flask(__name__)
-
-
 @app.route('/', methods=('GET', 'POST'))
 def index():
-
-    # read the data that came with the POST request as a dict
-    # data = flask.request.json
+    """Index page"""
     form = PredictForm()
-    answer = None
-    data_point = {}
+    answer = [0,0,0,0,0]
+    url = []
+    username = []
+    user_string = ''
+    user = []
+    answer_link = ''
 
     if form.validate_on_submit():
         # store the submitted values
@@ -41,24 +48,36 @@ def index():
 
         # Retrieve values from form
         keywords = submitted_data['keywords']
-        x = cv.transform(keywords)
-    
-        answer = str(answers.iloc[cosine_similarity(x, answers_vecs).argsort()[0][:-5:-1]].Body.values[0])
-        # Create array from values
+        keywords_vec = cv.transform([keywords])
+        indices = answers.iloc[cosine_similarity(keywords_vec, answers_vecs).argsort()[0][:-100:-1]]
+        answer_id = answers.iloc[cosine_similarity(keywords_vec, answers_vecs).argsort()[0][:-5:-1]].Id.values.astype(int)[0]
+        answer_link = "http://stackoverflow.com/questions/{}".format(answer_id)
 
-    # let's convert this into a numpy array so that we can
-    # stick it into our model
+        for i in range(5):
+            answer[i] = indices.Body.values[i]
+            current_user = indices.OwnerUserId.values.astype(int)[i]
+            
+            if current_user not in user:
+                user.append(current_user)
+            else:
+                j = i + 1
+                while current_user in user:
+                    current_user = indices.OwnerUserId.values.astype(int)[j]    
+                    j += 1
+                user.append(current_user)
 
-    # Classify!
-    
-    # y_pred = 0
-    
-    # Turn the result into a simple list so we can put it in
-    # a json (json won't understand numpy arrays)
+            url.append('http://stackoverflow.com/users/' + str(user[i]))
+            response = requests.get(url[i])
+            page = response.text
+            soup = BeautifulSoup(page, 'lxml')
+            username.append(str(soup.find('title')).split('-')[0].strip()[12:])
+            
+        user_string = "Users <a href={}>{}</a>, <a href={}>{}</a>, <a href={}>{}</a>, <a href={}>{}</a>, \
+        and <a href={}>{}</a> can help you with your question.".format(*sum([[x,y] for x,y in zip(url, username)],[])) 
 
-    # Put the result in a nice dict so we can send it as json
     return render_template('index.html',
         form=form,
-        answer=answer)
-
+        prediction=answer[0],
+        answer_link=answer_link,
+        user_string=user_string)
 

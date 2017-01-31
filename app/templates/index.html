@@ -2,32 +2,31 @@
 
 {% block body %}
   <section class="header">
-    <h2 class="title">StackOverflow Helper</h2>
+    <h2 class="title">StackOverflow Helper!</h2>
   </section>
   <hr />
 
   <div class="content">
-    <h4>
-      {% if answer %}
-      OMG It is a {{ answer }}.
-      {% else %}
-        Please fill out the form below!
+      {% if not prediction %}
+        <h4>Please enter your keywords</h4>
       {% endif %}
-    </h4>
-    <form method="POST">
-      {{ form.csrf_token }}
-      <div class="row">
-        <div class="three columns">
-          {{ form.keywords.label }} {{ form.keywords() }}
+    <form method="POST" length=100>
+          {{ form.hidden_tag() }}
+          <div class="row">
+            <div class="three columns">
+             {{ form.keywords() }}
+            </div>
+            <button type="submit" class="button-primary" style="background-color:green;border:green">Submit</button>
+          </div>
+        </form>
+      {% if prediction %}
+        <h5>{{ user_string | safe }}</h5>
+        <div>
+          <h5>Most relevant <a href = "{{ answer_link }}">answer</a>:</h5> 
+          <div style="background-color: #f2f2f2"> {{ prediction | safe }} </div>
         </div>
-      </div>
-      <div class="row">
-        <button type="submit" class="button-primary">Submit</button>
-      </div>
-      <div class="row">
-        <svg></svg>
-      </div>
-    </form>
+
+      {% endif %}
     <div
   </div>
 {% endblock body %}
