@@ -10,9 +10,9 @@ To use:
 
 Clone or download the repo.
 Check the dependencies and install any missing modules.   
-Download the answers.csv dataset from [here](https://www.kaggle.com/stackoverflow/pythonquestions) and place it in this directory.
-Run the [soh_pickler.py](soh_pickler.py) file from a command line.
-Run the [run.py](run.py) file.
+Download the answers.csv dataset file from [here](https://www.kaggle.com/stackoverflow/pythonquestions) and place it in this directory.  
+Run the [soh_pickler.py](soh_pickler.py) file from a command line.  
+Run the [run.py](run.py) file.  
 Open `localhost:9000` in a web browser.
 
 
