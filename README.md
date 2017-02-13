@@ -8,13 +8,12 @@ A Flask web app that allows one to search the most relevant Python StackOverflow
 
 To use:  
 
+Clone or download the repo.
 Check the dependencies and install any missing modules.   
-Download the answers.csv dataset from [here.](https://www.kaggle.com/stackoverflow/pythonquestions)
-Download and run the [pickler_file.py]() in the same folder where the answers.csv file is. 
-This creates three pickle objects called 
-Put these in a folder called 
-Download the python files.
-
+Download the answers.csv dataset from [here](https://www.kaggle.com/stackoverflow/pythonquestions) and place it in this directory.
+Run the [soh_pickler.py](soh_pickler.py) file from a command line.
+Run the [run.py](run.py) file.
+Open `localhost:9000` in a web browser.
 
 
 
