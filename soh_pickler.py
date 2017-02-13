@@ -27,3 +27,5 @@ with open(os.getcwd() + '/models/answers.pkl', 'wb') as picklefile:
     
 with open(os.getcwd() + '/models/answers_vecs.pkl', 'wb') as picklefile:
     pickle.dump(answers_vecs, picklefile)
+
+input('Done! Press Enter to continue')
